@@ -65,7 +65,6 @@ tests/tcpmux
 *.dir
 *.vcxproj
 *.vcxproj.filters
-*.vcxproj.user
 Debug
 Release
 CMakeFiles
