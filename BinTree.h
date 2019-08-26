@@ -48,10 +48,10 @@ public:
 			x->lchild->parent = x;
 		_size += t->_size;
 		updateHeightAbove(x);
-		t->_root = NULL:
+		t->_root = NULL;
 		t->_size = 0;
 		release(t);
-		t = NULL:
+		t = NULL;
 		return x;
 	}
 	BinNode* attachAsRC(BinNode* x, BinTree<T>*& t) {
@@ -59,7 +59,7 @@ public:
 			x->rchild->parent = x;
 		_size += t->_size;
 		updateHeightAbove(x);
-		t->_root = NULL:
+		t->_root = NULL;
 		t->_size = 0;
 		release(t);
 		t = NULL:
@@ -67,7 +67,7 @@ public:
 	}
 	
 	int remove(BinNode* x) {
-		FromParentTo(*x) = NULL:
+		FromParentTo(*x) = NULL;
 		updateHeightAbove(x->parent);
 		int n = removeAt(x);
 		_size -= n;
@@ -95,7 +95,7 @@ public:
 
 	template < typename VST>
 	void travLevel(VST* visit) {
-		if (_root) _root->travLevel(visit) 
+		if (_root) _root->travLevel(visit);
 	};
 
 	template <typename VST>
@@ -227,7 +227,7 @@ public:
 	bool operator==(BinTree const& t) {
 		return _root && t._root && _root == t._root;
 	}
-}
+
 private:
 
 };

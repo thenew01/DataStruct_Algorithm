@@ -1,7 +1,14 @@
 #pragma once
 
+struct BinNode;
+
 #define BinNodePosi(T) BinNode<T>* //节点位置
+
+//template <typename  T>
+//constexpr BinNode<T>* BinNodePosi(){};
+
 #define stature(p) ( (p) ? (p)->height : -1 ) //节点高度
+#include <cstddef>
 
 typedef enum { RB_RED, RB_BLACK } RBColor;
 
@@ -9,9 +16,9 @@ template <typename T>
 struct BinNode
 {
 	T data;
-	BinNodePosi(T) parent;
-	BinNodePosi(T) lchild;
-	BinNodePosi(T) rchild;
+	BinNode* parent;
+	BinNode* lchild;
+	BinNode* rchild;
 	int height;
 	int npl;	//Null Path Length;左式堆，也可用height代替
 	RBColor color;
@@ -47,6 +54,23 @@ struct BinNode
 	//template<typename VST> void travIn(VST&);	//中序
 	//template<typename VST> void travPost(VST&);	//后序
 
+	//template <typename VST>
+	//void travIn(VST& visit) {
+	//	switch (rand() % 5)
+	//	{
+	//	case 1:
+	//		travIn_I1(this, visit);break;
+	//	case 2:
+	//		travI_I2(this, visit);break;
+	//	case 3:
+	//		travIn_I3(this, visit); break;
+	//	case 4:
+	//		travIn_I4(this, visit);break;
+	//	default:
+	//		travIn_I5(this, visit);break;
+	//	}
+	//}
+	//
 	bool operator<(BinNode const& bn) { return data < bn.data; }
 	bool operator==(BinNode const& bn) { return data == bn.data; }
 
