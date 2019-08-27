@@ -1,11 +1,9 @@
 #pragma once
 
+template< typename T>
 struct BinNode;
 
 #define BinNodePosi(T) BinNode<T>* //节点位置
-
-//template <typename  T>
-//constexpr BinNode<T>* BinNodePosi(){};
 
 #define stature(p) ( (p) ? (p)->height : -1 ) //节点高度
 #include <cstddef>
@@ -35,7 +33,6 @@ struct BinNode
 	BinNode<T>* insertAsRC(T const& e) { return rchild = new BinNode(e, this); }
 	
 	//中序遍历用到的直接后继
-	template <typename T>
 	BinNode* succ() { //定位节点v的直接后继
 		BinNode* s = this;
 		if (rchild) {

@@ -2,17 +2,19 @@
 
 
 #include "BinNode.h"
+#include <stack>
+using namespace std;
 
 template <typename T> 
 class BinTree
 {
 private:
 	int _size;
-	BinNode* _root;
-	virtual int updateHeight(BinNode* x) {
+	BinNode<T>* _root;
+	virtual int updateHeight(BinNode<T>* x) {
 		return x->height = 1 + max(stature(x->lchild), stature(x->rchild));
 	}
-	void updateHeightAbove(BinNode* x) {
+	void updateHeightAbove(BinNode<T>* x) {
 		while (x) {
 			updateHeight(x);
 			x = x->parent;
@@ -20,61 +22,68 @@ private:
 	}
 
 public:
-	BinTree() :_size(0), _root(NULL);
-	~BinTree() { if (_size > 0) remove(_root); }
+	BinTree() :_size(0), _root(nullptr){}
+	virtual ~BinTree()
+	{
+		if (_size > 0) remove(_root);
+	}
+	
 	int size() const {
 		return _size;
 	}
 	bool empty() { return !_root; }
-	BinNode* root() { return _root; }
-	BinNode* invertAsRoot(T const& e) {
+
+	BinNode<T>* root() { return _root; }
+
+	BinNode<T>* invertAsRoot(T const& e) {
 		_size = 1; return _root = new BinNode<T>(e);
 	}
-	BinNode* insertAsLC(BinNode* x, T const& e) {
+	
+	BinNode<T>* insertAsLC(BinNode<T>* x, T const& e) {
 		_size++; x->insertAsLC(e);
 		updateHeightAbove(x);
 		return x->lchild;
 	}
 	
-	BinNode* insertAsRC(BinNode* x, T const& e) {
+	BinNode<T>* insertAsRC(BinNode<T>* x, T const& e) {
 		_size++;
 		x->insertAsRC(x);
 		updateHeightAbove(x);
 		return x->rchild;
 	}
 
-	BinNode* attachAsLC(BinNode* x, BinTree<T>* &t) {
+	BinNode<T>* attachAsLC(BinNode<T>* x, BinTree<T>* &t) {
 		if (x->lchild = t._root)
 			x->lchild->parent = x;
 		_size += t->_size;
 		updateHeightAbove(x);
-		t->_root = NULL;
+		t->_root = nullptr;
 		t->_size = 0;
 		release(t);
-		t = NULL;
+		t = nullptr;
 		return x;
 	}
-	BinNode* attachAsRC(BinNode* x, BinTree<T>*& t) {
+	BinNode<T>* attachAsRC(BinNode<T>* x, BinTree<T>*& t) {
 		if (x->rchild = t->_root)
 			x->rchild->parent = x;
 		_size += t->_size;
 		updateHeightAbove(x);
-		t->_root = NULL;
+		t->_root = nullptr;
 		t->_size = 0;
 		release(t);
-		t = NULL:
+		t = nullptr;
 		return x;
 	}
 	
-	int remove(BinNode* x) {
-		FromParentTo(*x) = NULL;
+	int remove(BinNode<T>* x) {
+		FromParentTo(*x) = nullptr;
 		updateHeightAbove(x->parent);
 		int n = removeAt(x);
 		_size -= n;
 		return n;
 	}
-	template <typename T>
-	static int removeAt(BinNode* x) {
+
+	static int removeAt(BinNode<T>* x) {
 		if (!x) return 0;
 		int n = 1 + removeAt(x->lchild) + removeAt(x->rchild);
 		release(x->data);
@@ -82,8 +91,8 @@ public:
 		return n;
 	}
 	//摘除为一颗独立子树
-	BinTree<T>* secede(BinNode* x) {
-		FromParentTo(x) = NULL;
+	BinTree<T>* secede(BinNode<T>* x) {
+		FromParentTo(x) = nullptr;
 		updateHeightAbove(x->parent);
 		BinTree<T>* S = new BinTree<T>;
 		S->_root = x;
@@ -114,17 +123,17 @@ public:
 	}
 
 	//递归遍历
-	template <typename T, typename VST>
-	void travPre_R(BinNode* x, VST& visit) {
+	template < typename VST>
+	void travPre_R(BinNode<T>* x, VST& visit) {
 		if (!x) return;
 		visit(x->data);
 		travPre_R(x->lchild, visit);
 		travPre_R(x->rchild, visit);
 	}
 
-	template <typename T, typename VST>
-	void travPost_R(BinNode* x, VST& visit) {
-		if (x == NULL)
+	template < typename VST>
+	void travPost_R(BinNode<T>* x, VST& visit) {
+		if (x == nullptr)
 			return;
 
 		travPost_R(x->lchild, visit);
@@ -132,18 +141,18 @@ public:
 		visit(x->data);
 	}
 
-	template <typename T, typename VST>
-	void travIn_R(BinNode* x, VST& visit) {
-		if (x == NULL)return;
+	template < typename VST>
+	void travIn_R(BinNode<T>* x, VST& visit) {
+		if (x == nullptr)return;
 		travIn_R(x->lchild, visit);
 		visit(x->data);
 		travIn_R(x->rchild, visit);
 	}
 
 	//迭代遍历
-	template <typename T, typename VST>
-	void travPre_I2(BinNode* x, VST& visit) {
-		stack<BinNode*> s;
+	template < typename VST>
+	void travPre_I2(BinNode<T>* x, VST& visit) {
+		stack<BinNode<T>*> s;
 		while (true) {
 			visitAlongLeftBranch(x, visit, s);
 			if( s.empty()) break;
@@ -151,8 +160,8 @@ public:
 		}
 	}
 
-	template <typename T>
-	static void visitAlongLeftBranch(BinNode* x, stack<BinNode*> s) {
+	
+	static void visitAlongLeftBranch(BinNode<T>* x, stack<BinNode<T>*> s) {
 		while (x) {
 			visit(x->data);
 			s.push(x->rchild);
@@ -160,9 +169,9 @@ public:
 		}
 	}
 
-	template <typename T, typename VST>
-	void travIn_I1(BinNode* x, VST& visit) {
-		stack<BinNode*> s;
+	template <typename VST>
+	void travIn_I1(BinNode<T>* x, VST& visit) {
+		stack<BinNode<T>*> s;
 		while (true) {
 			goAlongLeftBranch(x, s);
 			if (s.empty()) break;
@@ -172,8 +181,8 @@ public:
 		}
 	}
 
-	template <typename T, typename VST>
-	static void goAlongLeftBranch(BinNode* x, stack<BinNode*>& S) {
+	template < typename VST>
+	static void goAlongLeftBranch(BinNode<T>* x, stack<BinNode<T>*>& S) {
 		while (x)
 		{
 			S.push(x);
@@ -181,9 +190,9 @@ public:
 		}
 	}
 
-	template <typename T, typename VST>
-	void travIn_I2(BinNode* x, VST& visit) {
-		stach<BinNode* > s;
+	template < typename VST>
+	void travIn_I2(BinNode<T>* x, VST& visit) {
+		stack<BinNode<T>* > s;
 		while (true)
 		{
 			if (x) {
@@ -200,8 +209,8 @@ public:
 		}
 	}
 
-	template <typename T, typename VST>
-	void travIn_I3(BinNode* x, VST& visit) {
+	template <typename VST>
+	void travIn_I3(BinNode<T>* x, VST& visit) {
 		bool backtrack = false;
 		while (true) {
 			if (!backtrack && HasLChild(*x)) {
@@ -221,21 +230,45 @@ public:
 		}
 	}
 
-	bool  operator<(BinTree const& t) {
+	static void gotoHeighestLeafVisibleFromLeft(stack<BinNode<T>*> S )
+	{
+		while( BinNode<T> * x = S.top)
+		{
+			if( HasLChild(*x))
+			{
+				if (HasRChild(*x)) S.push(x->rchild);
+				S.push(x->lchild);
+			}
+			else
+			{
+				S.push(x->rchild);
+			}
+		}
+		S.pop();
+	}
+
+	template < typename VST>
+	void travPost_I(BinNode<T>* x, VST& visit)
+	{
+		stack<BinNode<T>*> S;
+		if (x) S.push(x);
+		while(!S.empty())
+		{
+			if (S.top() != x->parent)
+				gotoHeighestLeafVisibleFromLeft(S);
+			x = S.top;
+			visit(x->data);
+		}
+	}
+	
+
+	bool  operator<(BinTree<T> const& t) {
 		return _root && t.root && lt(_root, t._root);
 	}
-	bool operator==(BinTree const& t) {
+	bool operator==(BinTree<T> const& t) {
 		return _root && t._root && _root == t._root;
 	}
 
 private:
 
 };
-
-BinTree::BinTree()
-{
-}
-
-BinTree::~BinTree()
-{
-}
