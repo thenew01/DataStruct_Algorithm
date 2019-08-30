@@ -3,17 +3,34 @@
 
 #include "BinNode.h"
 #include <stack>
+
+#define  max(a, b) ( (a) > (b) ? (a) : (b))
 using namespace std;
+
+template <typename K, typename  V>
+struct Entry
+{
+	K key;
+	V value;
+	Entry( K k = K(), V v = K()) : key(k), value(v){}
+	Entry(Entry<K, V> const & e) : key(e.key) ,value(e.value) {}
+
+	bool operator< (Entry<K, V> const& e) { return key < e.key; }
+	bool operator> (Entry<K, V> const& e) { return key > e.key; }
+	bool operator != (Entry<K, V> const& e) { return key != e.key; }
+};
 
 template <typename T> 
 class BinTree
 {
-private:
+protected:
 	int _size;
 	BinNode<T>* _root;
+	
 	virtual int updateHeight(BinNode<T>* x) {
 		return x->height = 1 + max(stature(x->lchild), stature(x->rchild));
 	}
+
 	void updateHeightAbove(BinNode<T>* x) {
 		while (x) {
 			updateHeight(x);
@@ -31,6 +48,7 @@ public:
 	int size() const {
 		return _size;
 	}
+	void setsize(int s) { _size = s; }
 	bool empty() { return !_root; }
 
 	BinNode<T>* root() { return _root; }
@@ -86,18 +104,18 @@ public:
 	static int removeAt(BinNode<T>* x) {
 		if (!x) return 0;
 		int n = 1 + removeAt(x->lchild) + removeAt(x->rchild);
-		release(x->data);
+		//release(x->data);
 		release(x);
 		return n;
 	}
 	//摘除为一颗独立子树
 	BinTree<T>* secede(BinNode<T>* x) {
-		FromParentTo(x) = nullptr;
+		FromParentTo(*x) = nullptr;
 		updateHeightAbove(x->parent);
 		BinTree<T>* S = new BinTree<T>;
 		S->_root = x;
 		x->parent = NULL;
-		S->_size = x->size();
+		S->setsize(x->size());
 		_size -= S->_size;
 		return S;
 	}
@@ -223,7 +241,7 @@ public:
 					backtrack = false;
 				}
 				else {
-					if( !(x = x->succ()) ) break;
+					if( !(x = x->success()) ) break;
 					backtrack = true;
 				}
 			}

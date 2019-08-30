@@ -3,10 +3,31 @@
 
 #include <iostream>
 #include "BinTree.h"
+#include "bst.h"
+#include "AVL.h"
+
+void print(int e)
+{
+	printf("%d ", e);
+}
 
 int main()
 {
     std::cout << "Hello World!\n";
+
+	int a[] = { 1, 2, 4, 3, 6, 8, 0, 5, 7, 9 };
+	auto tree = new BST<int>;
+	auto root0 = tree->invertAsRoot(11);
+	auto node = root0;
+	for (int i=0;i<sizeof(a)/sizeof(a[0]);i++)
+	{
+		node = tree->insert(a[i]);
+	}
+	auto t1 = tree->secede(tree->root()->lchild);
+	//auto t2 = tree->secede(tree->root()->rchild);
+
+	tree->travIn(print);
+	
 }
 
 // 运行程序: Ctrl + F5 或调试 >“开始执行(不调试)”菜单

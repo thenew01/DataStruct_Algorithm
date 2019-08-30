@@ -18,12 +18,21 @@
     <ClCompile Include="DataStructure_Algorithm.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="BinNode.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BinNode.h">
       <Filter>源文件</Filter>
     </ClInclude>
     <ClInclude Include="BinTree.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="BST.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="AVL.h">
       <Filter>源文件</Filter>
     </ClInclude>
   </ItemGroup>
